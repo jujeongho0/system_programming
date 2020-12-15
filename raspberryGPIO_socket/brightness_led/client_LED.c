@@ -143,127 +143,50 @@ int main(int argc, char *argv[])
 	if(-1 == GPIODirection(GPIO_BLUE,OUT))
 		return(2);
 		
-	while(1)
-	{
+	while(1){
 		sock = socket(PF_INET, SOCK_STREAM, 0);
-		if(sock == -1)
-			error_handling("socket() error");
+		if(sock == -1)	error_handling("socket() error");
 		memset(&serv_addr, 0, sizeof(serv_addr));
 		serv_addr.sin_family = AF_INET;
 		serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 		serv_addr.sin_port = htons(atoi(argv[2]));
-		if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1)
+		if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr))==-1)	
 			error_handling("connect() error");
 		str_len = read(sock, msg, sizeof(msg));
-		if(str_len == -1)
-			error_handling("read() error");
-		
+		if(str_len == -1) error_handling("read() error");		
 		brightness = atoi(msg);
 		printf("brightness : %d\n",brightness);
-		if(brightness < 400) //dark
-		{	
-			printf("LED ON!\n");
-			
-			if(brightness%9 == 0)//RGB
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_BLUE,1))
-					return 3;
+		if(brightness < 400){ //dark	
+			printf("LED ON!\n");			
+			if(brightness%7 == 0){//RGB
+				if(-1 == GPIOWrite(GPIO_RED,1))	return 3;					
+				if(-1 == GPIOWrite(GPIO_GREEN,1)) return 3;					
+				if(-1 == GPIOWrite(GPIO_BLUE,1)) return 3;
 			}
-			else if(brightness%9 == 1)//RG
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-				
+			else if(brightness%7 == 1){//RG
+				if(-1 == GPIOWrite(GPIO_RED,1)) return 3;					
+				if(-1 == GPIOWrite(GPIO_GREEN,1)) return 3;				
 			}
-			else if(brightness%9 == 2)//R
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-			
-				
+			else if(brightness%7 == 2){//R
+				if(-1 == GPIOWrite(GPIO_RED,1))	return 3;				
 			}
-			else if(brightness%9 == 3)//RGB
-			{				
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_BLUE,1))
-					return 3;
-				
+			else if(brightness%7 == 3){//GB
+				if(-1 == GPIOWrite(GPIO_RED,1))	return 3;					
+				if(-1 == GPIOWrite(GPIO_GREEN,1)) return 3;			
 			}
-			else if(brightness%9 == 4)//GB
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-					
-				
-				
+			else if(brightness%7 == 4)//G
+				if(-1 == GPIOWrite(GPIO_GREEN,1)) return 3;
+			else if(brightness%7 == 5){//RB
+				if(-1 == GPIOWrite(GPIO_RED,1))	return 3;					
+				if(-1 == GPIOWrite(GPIO_BLUE,1)) return 3;				
 			}
-			else if(brightness%9 == 5)//G
-			{
-				
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-			
-				
-			}
-			else if(brightness%9 == 6)//RGB
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_GREEN,1))
-					return 3;
-					
-				if(-1 == GPIOWrite(GPIO_BLUE,1))
-					return 3;
-				
-			}
-			else if(brightness%9 == 7)//RB
-			{
-				if(-1 == GPIOWrite(GPIO_RED,1))
-					return 3;
-					
-				
-					
-				if(-1 == GPIOWrite(GPIO_BLUE,1))
-					return 3;
-				
-			}
-			else//B
-			{
-				
-					
-				if(-1 == GPIOWrite(GPIO_BLUE,1))
-					return 3;
-				
-			}
+			else//B					
+				if(-1 == GPIOWrite(GPIO_BLUE,1)) return 3;
 		}
-		else //bright
-		{			
-			if(-1 == GPIOWrite(GPIO_RED,0))
-				return 3;
-			if(-1 == GPIOWrite(GPIO_GREEN,0))
-				return 3;
-			if(-1 == GPIOWrite(GPIO_BLUE,0))
-				return 3;
-			
+		else{//bright			
+			if(-1 == GPIOWrite(GPIO_RED,0))	return 3;
+			if(-1 == GPIOWrite(GPIO_GREEN,0)) return 3;
+			if(-1 == GPIOWrite(GPIO_BLUE,0)) return 3;			
 		}
 		usleep(500 * 100);
 		close(sock);

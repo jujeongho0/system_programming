@@ -398,8 +398,7 @@ int main(int argc, char *argv[])
 			if (-1 == GPIOWrite(GPIO_GREEN, 0)) return 3;
 			if (-1 == GPIOWrite(GPIO_BLUE, 0)) return 3;
 		}
-
-		PWMEnable(PWM,1);
+		
 		usleep(500*100);
 		close(sock);
 	}
@@ -407,5 +406,6 @@ int main(int argc, char *argv[])
 	//Disable GPIO pins
 	if (-1 == GPIOUnexport(POUT))
 		return(4);
+	PWMUnexport(PWM);
 	return(0);
 }
